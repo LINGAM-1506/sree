@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>❤️ Happy Birthday ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  background: #111;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Title */
+h1 {
+  text-align: center;
+  color: #ff76c9;
+  margin-top: 20px;
+  font-size: clamp(22px, 8vw, 45px);
+  text-shadow: 0px 0px 10px pink;
+}
+
+/* Gallery Container */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+/* Polaroid Style */
+.polaroid {
+  width: 40vw; /* Responsive */
+  max-width: 170px;
+  margin: 15px;
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0px 8px 20px rgba(255, 100, 150, 0.6);
+  border-radius: 10px;
+  transform: rotate(calc(-10deg + (20 * var(--angle))));
+  transition: transform 0.4s, box-shadow 0.4s;
+  cursor: pointer;
+}
+
+.polaroid img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+.caption {
+  text-align: center;
+  font-size: clamp(10px, 3vw, 16px);
+  margin-top: 6px;
+  font-weight: bold;
+  color: #444;
+}
+
+/* Hover Animation */
+.polaroid:hover {
+  transform: scale(1.1) rotate(0deg);
+}
+
+/* Fullscreen popup */
+#fullView {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.9);
+  top: 0;
+  left: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 999;
+}
+
+/* ---- MOBILE RESPONSIVE POPUP IMAGE ---- */
+#fullView img {
+  width: 85vw; /* 85% of screen width */
+  max-width: 420px; /* doesn't exceed on laptop */
+  border-radius: 12px;
+  box-shadow: 0px 0px 25px pink;
+  border: 8px solid white;
+  animation: fadeZoom 0.8s ease-in-out;
+}
+
+@keyframes fadeZoom {
+  from {opacity: 0; transform: scale(0.4);}
+  to {opacity: 1; transform: scale(1);}
+}
+
+/* Caption */
+#fullText {
+  color: white;
+  font-size: clamp(14px, 4vw, 20px);
+  margin-top: 10px;
+  text-align: center;
+  width: 90%;
+}
+
+/* Close Button */
+#closeBtn {
+  margin-top: 15px;
+  padding: 10px 25px;
+  background: hotpink;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: clamp(14px, 5vw, 22px);
+  cursor: pointer;
+}
+
+/* CONFETTI EFFECT */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: hsl(var(--hue), 100%, 50%);
+  top: -20px;
+  animation: fall 2.5s linear forwards;
+  border-radius: 3px;
+  z-index: 9999;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(720deg);
+  }
+}
+</style>
+</head>
+<body>
+
+<h1>🎀 Happy Birthday 🎀</h1>
+
+<div class="gallery" id="gallery"></div>
+
+<!-- Fullscreen viewer -->
+<div id="fullView">
+  <img id="fullImg">
+  <div id="fullText"></div>
+  <button id="closeBtn">Close</button>
+</div>
+
+<audio id="music" src="song.mp3"></audio>
+
+<script>
+const photos = [
+  {file:"s10.jpg", text:"✨ First Memory ✨"},
+  {file:"s2.jpg", text:"❤️ My Favorite Smile ❤️"},
+  {file:"s3.jpg", text:"💫 A beautiful day 💫"},
+  {file:"s4.jpg", text:"💕 It's amazing photo 💕"},
+  {file:"s5.jpg", text:"🌸 Always glowing 🌸"},
+  {file:"s6.jpg", text:"😊 special moments 😊"},
+  {file:"s7.jpg", text:"💖 A memory with love the flower 💖"},
+  {file:"s8.jpg", text:"⭐ brighter smile ⭐"},
+  {file:"s9.jpg", text:"🌈 Happiness in one picture 🌈"},
+  {file:"s1.jpg", text:"☀ Night mighty pic ☀"},
+  {file:"s11.jpg", text:"🎉 Happy Birthday 🎉"},
+  {file:"biriyani.jpg", text:"🍗 intha kaetute irunthella vachuko 🎉"},
+  {file:"biriyani.jpg", text:"🍗 ippo neetha enaku vaanki tharanum😆"}
+  
+];
+
+const gallery = document.getElementById("gallery");
+const music = document.getElementById("music");
+
+photos.forEach((pic, index)=>{
+  const div = document.createElement("div");
+  div.classList.add("polaroid");
+  div.style.setProperty("--angle", Math.random());
+  div.innerHTML = `
+    <img src="${pic.file}">
+    <div class="caption">${pic.text}</div>
+  `;
+  
+  div.addEventListener("click", ()=> openFull(pic));
+  gallery.appendChild(div);
+});
+
+function openFull(pic){
+  document.getElementById("fullView").style.display = "flex";
+  document.getElementById("fullImg").src = pic.file;
+  document.getElementById("fullText").innerHTML = pic.text;
+  music.play();
+  confettiBurst();
+}
+
+/* Confetti burst function */
+function confettiBurst() {
+  for (let i = 0; i < 50; i++) {
+    const confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+    confetti.style.left = Math.random() * window.innerWidth + "px";
+    confetti.style.setProperty("--hue", Math.random() * 360);
+    document.body.appendChild(confetti);
+
+    setTimeout(() => confetti.remove(), 2500);
+  }
+}
+
+document.getElementById("closeBtn").onclick = ()=>{
+  document.getElementById("fullView").style.display = "none";
+};
+</script>
+</body>
+</html>
